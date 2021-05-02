@@ -23,8 +23,8 @@ class Tetromino(
 	) = Tetromino(type, orientation, x, y)
 
 	companion object {
-		fun random() = Tetromino(
-			Type.values().run { get(Random.nextInt(size)) },
+		fun spawn(type: Type) = Tetromino(
+			type,
 			Orientation.North,
 			stageWidth / 2 - 2,
 			stageHeight + 1

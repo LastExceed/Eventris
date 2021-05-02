@@ -9,7 +9,8 @@ val virtualHeight
 
 object Game {
 	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }
-	var currentPiece = Tetromino.random()
+	private val randomizer = BagRandomizer(1)
+	var currentPiece = randomizer.next()
 
 	fun onKeyDown(key: KeyboardKey) {
 		when (key) {
@@ -102,7 +103,7 @@ object Game {
 				stage[y + it.second][x + it.first] = type.color
 			}
 		}
-		currentPiece = Tetromino.random()
+		currentPiece = randomizer.next()
 
 		stage.removeAll { it.all { it.isNotBlack() } }
 		repeat(virtualHeight - stage.size) {

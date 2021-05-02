@@ -1,8 +1,6 @@
-import kotlinx.coroutines.*
-
 fun main() {
-	Engine.init()
-	Engine.runEventLoop()
+	Renderer.init()
+	Renderer.runEventLoop()
 }
 
 //kick table

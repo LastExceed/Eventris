@@ -62,7 +62,7 @@ object Game {
 			}
 		} while (repeat && new.fits)
 
-		if (succeededOnce) Engine.drawFrame()
+		if (succeededOnce) Renderer.drawFrame()
 	}
 
 	private fun tryRotate(rotation: Rotation) {
@@ -77,7 +77,7 @@ object Game {
 		val new = currentPiece.copy(orientation = orientations[(index + offset) % 4])
 		if (new.fits) {
 			currentPiece = new
-			Engine.drawFrame()
+			Renderer.drawFrame()
 		}
 	}
 
@@ -101,7 +101,7 @@ object Game {
 			stage.add(Array(stageWidth) { Color.Black })
 		}
 
-		Engine.drawFrame()
+		Renderer.drawFrame()
 	}
 
 	object Das {

@@ -3,7 +3,7 @@ import com.kgl.glfw.Window
 import com.kgl.opengl.utils.*
 import org.lwjgl.opengl.*
 
-object Engine {
+object Renderer {
 	lateinit var window: Window
 
 	fun init() {

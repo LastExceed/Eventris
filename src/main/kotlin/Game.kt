@@ -74,16 +74,7 @@ object Game {
 			Rotation.OneEighty -> 2
 		}
 
-		val newOrientation = orientations[(index + offset) % 4]
-
-		val (xOffset, yOffset) = when (newOrientation) {
-			Tetromino.Orientation.North -> 0 to 0
-			Tetromino.Orientation.East -> 0 to 0
-			Tetromino.Orientation.South -> 0 to 0
-			Tetromino.Orientation.West -> 0 to 0
-		}
-
-		val new = currentPiece.copy(orientation = newOrientation)
+		val new = currentPiece.copy(orientation = orientations[(index + offset) % 4])
 		if (new.fits) {
 			currentPiece = new
 			Engine.drawFrame()

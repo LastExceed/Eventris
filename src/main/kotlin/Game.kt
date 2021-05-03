@@ -8,8 +8,9 @@ val virtualHeight
 	get() = stageHeight + 4
 
 object Game {
-	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }
 	private val randomizer = BagRandomizer(1)
+	private val rotationSystem = SRS
+	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }
 	var currentTetromino = randomizer.next()
 	val ghost
 		get() = currentTetromino.copy().apply { tryMove(MoveDirection.Down, true) }
@@ -77,9 +78,15 @@ object Game {
 			get((index + offset) % 4)
 		}
 
-		val success = copy(orientation = newOrientation).fits
-		if (success) orientation = newOrientation
-		return success
+		val kickTable = rotationSystem.getKicktable(type, orientation, newOrientation)
+		val kick = kickTable.find { copy(newOrientation, x + it.first, y + it.second).fits }
+
+		if (kick != null) {
+			orientation = newOrientation
+			x += kick.first
+			y += kick.second
+		}
+		return kick != null
 	}
 
 	private val Tetromino.fits

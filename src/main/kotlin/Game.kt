@@ -46,15 +46,13 @@ object Game {
 	}
 
 	private fun tryMove(direction: MoveDirection, repeat: Boolean = false) {
-		val xOffset = when (direction) {
-			MoveDirection.Left -> -1
-			MoveDirection.Right -> 1
-			MoveDirection.Down -> 0
+		val (xOffset, yOffset) = when (direction) {
+			MoveDirection.Left -> -1 to 0
+			MoveDirection.Right -> 1 to 0
+			MoveDirection.Down -> 0 to -1
 		}
-		val yOffset = if (direction == MoveDirection.Down) -1 else 0
 
 		var succeededOnce = false
-
 		tailrec fun checkNext(current: Tetromino): Tetromino {
 			val new = current.run { copy(x = x + xOffset, y = y + yOffset) }
 			return if (!new.fits) current
@@ -64,7 +62,6 @@ object Game {
 				else checkNext(new)
 			}
 		}
-
 		currentPiece = checkNext(currentPiece)
 
 		if (succeededOnce) Renderer.drawFrame()
@@ -132,7 +129,7 @@ object Game {
 		}
 
 		fun execute() {
-			(nextTime ?: return).let { if (System.currentTimeMillis() < it) return }
+			nextTime.let { if (it == null || System.currentTimeMillis() < it) return }
 			when (direction) {
 				DasDirection.Left -> tryMove(MoveDirection.Left, true)
 				DasDirection.Right -> tryMove(MoveDirection.Right, true)
@@ -141,8 +138,6 @@ object Game {
 		}
 	}
 }
-
-
 
 enum class DasDirection {
 	Left,

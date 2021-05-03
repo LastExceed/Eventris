@@ -1,6 +1,7 @@
 import com.kgl.glfw.*
 import com.kgl.glfw.Window
 import com.kgl.opengl.utils.*
+import org.lwjgl.glfw.*
 import org.lwjgl.opengl.*
 
 object Renderer {
@@ -38,6 +39,21 @@ object Renderer {
 		}
 	}
 
+	fun toggleFullscreen() {
+		with(Glfw.primaryMonitor!!) {
+			val monitor = if (window.monitor == null) this else null
+			//https://github.com/Dominaezzz/kgl/issues/33
+			//window.setMonitor(monitor, 0, 0, videoMode.width, videoMode.height, videoMode.refreshRate)
+			GLFW.glfwSetWindowMonitor(window.ptr, monitor?.ptr ?: 0, 0, 0, videoMode.width, videoMode.height, videoMode.refreshRate)
+
+			if (monitor == null) {
+				window.position = 100 to 100
+				drawFrame()
+			}
+		}
+
+	}
+
 	private const val squareSize = 0.04f
 
 	fun drawFrame() {
@@ -73,7 +89,7 @@ object Renderer {
 		window.swapBuffers()
 	}
 
-	fun drawSquare(x: Int, y: Int, color: Color) {
+	private fun drawSquare(x: Int, y: Int, color: Color) {
 		val xf = x * squareSize
 		val yf = y * squareSize
 

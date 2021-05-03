@@ -14,6 +14,9 @@ object Game {
 
 	fun onKeyDown(key: KeyboardKey) {
 		when (key) {
+			KeyboardKey.F11 -> {
+				Renderer.toggleFullscreen()
+			}
 			KeyboardKey.LEFT -> {
 				tryMove(MoveDirection.Left)
 				Das.begin(DasDirection.Left)

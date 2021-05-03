@@ -68,7 +68,12 @@ object Renderer {
 			}
 		}
 
-		with(Game.currentPiece) {
+		with(Game.ghost) {
+			blocks.forEach {
+				drawSquare(x + it.first, y + it.second, type.color, true)
+			}
+		}
+		with(Game.currentTetromino) {
 			blocks.forEach {
 				drawSquare(x + it.first, y + it.second, type.color)
 			}
@@ -89,13 +94,14 @@ object Renderer {
 		window.swapBuffers()
 	}
 
-	private fun drawSquare(x: Int, y: Int, color: Color) {
+	private fun drawSquare(x: Int, y: Int, color: Color, isGhost: Boolean = false) {
 		val xf = x * squareSize
 		val yf = y * squareSize
 
 		GL11.glBegin(GL11.GL_QUADS)
 
-		GL11.glColor3f(color.r, color.g, color.b)
+		if (isGhost) GL11.glColor3f(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f)
+		else GL11.glColor3f(color.r, color.g, color.b)
 
 		GL11.glVertex2f(xf, yf)
 		GL11.glVertex2f(xf + squareSize, yf)

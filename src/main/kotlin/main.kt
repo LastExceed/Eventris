@@ -4,8 +4,6 @@ fun main() {
 }
 
 //kick table
-//randomizer
-//ghost piece
 
 
 //fun triangle() {

@@ -10,32 +10,34 @@ val virtualHeight
 object Game {
 	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }
 	private val randomizer = BagRandomizer(1)
-	var currentPiece = randomizer.next()
+	var currentTetromino = randomizer.next()
+	val ghost
+		get() = currentTetromino.copy().apply { tryMove(MoveDirection.Down, true) }
 
 	fun onKeyDown(key: KeyboardKey) {
 		when (key) {
-			KeyboardKey.F11 -> {
-				Renderer.toggleFullscreen()
-			}
+			KeyboardKey.F11 -> Renderer.toggleFullscreen()
+
 			KeyboardKey.LEFT -> {
-				tryMove(MoveDirection.Left)
 				Das.begin(DasDirection.Left)
+				if (currentTetromino.tryMove(MoveDirection.Left, false)) Renderer.drawFrame()
 			}
 			KeyboardKey.RIGHT -> {
-				tryMove(MoveDirection.Right)
 				Das.begin(DasDirection.Right)
+				if (currentTetromino.tryMove(MoveDirection.Right, false)) Renderer.drawFrame()
 			}
 			KeyboardKey.DOWN -> {
-				tryMove(MoveDirection.Down, true)
+				if (currentTetromino.tryMove(MoveDirection.Down, true)) Renderer.drawFrame()
 			}
 			KeyboardKey.SPACE -> {
-				tryMove(MoveDirection.Down, true)
+				if (currentTetromino.tryMove(MoveDirection.Down, true)) Renderer.drawFrame()
 				lockPiece()
 			}
-			KeyboardKey.A -> tryRotate(Rotation.CounterClockwise)
-			KeyboardKey.D -> tryRotate(Rotation.Clockwise)
-			KeyboardKey.LEFT_SHIFT -> tryRotate(Rotation.OneEighty)
-			else -> {}
+			KeyboardKey.A -> if (currentTetromino.tryRotate(Rotation.CounterClockwise)) Renderer.drawFrame()
+			KeyboardKey.D -> if (currentTetromino.tryRotate(Rotation.Clockwise)) Renderer.drawFrame()
+			KeyboardKey.LEFT_SHIFT -> if (currentTetromino.tryRotate(Rotation.OneEighty)) Renderer.drawFrame()
+			else -> {
+			}
 		}
 	}
 
@@ -48,42 +50,36 @@ object Game {
 		if (Das.direction == directionToCancel) Das.cancel()
 	}
 
-	private fun tryMove(direction: MoveDirection, repeat: Boolean = false) {
-		val (xOffset, yOffset) = when (direction) {
-			MoveDirection.Left -> -1 to 0
-			MoveDirection.Right -> 1 to 0
-			MoveDirection.Down -> 0 to -1
+	private fun Tetromino.tryMove(direction: MoveDirection, repeat: Boolean): Boolean {
+		val new = copy()
+		when (direction) {
+			MoveDirection.Left -> new.x--
+			MoveDirection.Right -> new.x++
+			MoveDirection.Down -> new.y--
 		}
-
-		var succeededOnce = false
-		tailrec fun checkNext(current: Tetromino): Tetromino {
-			val new = current.run { copy(x = x + xOffset, y = y + yOffset) }
-			return if (!new.fits) current
-			else {
-				succeededOnce = true
-				if (!repeat) new
-				else checkNext(new)
-			}
+		val success = new.fits
+		if (success) {
+			x = new.x
+			y = new.y
+			if (repeat) tryMove(direction, true)
 		}
-		currentPiece = checkNext(currentPiece)
-
-		if (succeededOnce) Renderer.drawFrame()
+		return success
 	}
 
-	private fun tryRotate(rotation: Rotation) {
-		val orientations = Tetromino.Orientation.values()
-		val index = orientations.indexOf(currentPiece.orientation)
-		val offset = when (rotation) {
-			Rotation.Clockwise -> 1
-			Rotation.CounterClockwise -> 3
-			Rotation.OneEighty -> 2
+	private fun Tetromino.tryRotate(rotation: Rotation): Boolean {
+		val newOrientation = Tetromino.Orientation.values().run {
+			val index = indexOf(currentTetromino.orientation)
+			val offset = when (rotation) {
+				Rotation.Clockwise -> 1
+				Rotation.CounterClockwise -> 3
+				Rotation.OneEighty -> 2
+			}
+			get((index + offset) % 4)
 		}
 
-		val new = currentPiece.copy(orientation = orientations[(index + offset) % 4])
-		if (new.fits) {
-			currentPiece = new
-			Renderer.drawFrame()
-		}
+		val success = copy(orientation = newOrientation).fits
+		if (success) orientation = newOrientation
+		return success
 	}
 
 	private val Tetromino.fits
@@ -94,12 +90,12 @@ object Game {
 		}
 
 	private fun lockPiece() {
-		with(currentPiece) {
+		with(currentTetromino) {
 			blocks.forEach {
 				stage[y + it.second][x + it.first] = type.color
 			}
 		}
-		currentPiece = randomizer.next()
+		currentTetromino = randomizer.next()
 
 		stage.removeAll { it.all { it.isNotBlack() } }
 		repeat(virtualHeight - stage.size) {
@@ -134,8 +130,8 @@ object Game {
 		fun execute() {
 			nextTime.let { if (it == null || System.currentTimeMillis() < it) return }
 			when (direction) {
-				DasDirection.Left -> tryMove(MoveDirection.Left, true)
-				DasDirection.Right -> tryMove(MoveDirection.Right, true)
+				DasDirection.Left -> if (currentTetromino.tryMove(MoveDirection.Left, true)) Renderer.drawFrame()
+				DasDirection.Right -> if (currentTetromino.tryMove(MoveDirection.Right, true)) Renderer.drawFrame()
 				null -> return
 			}
 		}

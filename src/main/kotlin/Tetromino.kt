@@ -2,19 +2,20 @@ import kotlin.random.*
 
 class Tetromino(
 	val type: Type,
-	val orientation: Orientation,
-	val x: Int,
-	val y: Int
+	var orientation: Orientation,
+	var x: Int,
+	var y: Int
 ) {
-	val blocks = type.defaultBlocks.map {
-		val offset = type.size - 1
-		when (orientation) {
-			Orientation.North -> it
-			Orientation.East -> Pair(it.second, -it.first + offset)
-			Orientation.South -> Pair(-it.first + offset, -it.second + offset)
-			Orientation.West -> Pair(-it.second + offset, it.first)
-		}
-	}.toSet()
+	val blocks
+		get() = type.defaultBlocks.map {
+			val offset = type.size - 1
+			when (orientation) {
+				Orientation.North -> it
+				Orientation.East -> Pair(it.second, -it.first + offset)
+				Orientation.South -> Pair(-it.first + offset, -it.second + offset)
+				Orientation.West -> Pair(-it.second + offset, it.first)
+			}
+		}.toSet()
 
 	fun copy(
 		orientation: Orientation = this.orientation,

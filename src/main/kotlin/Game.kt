@@ -54,13 +54,18 @@ object Game {
 		val yOffset = if (direction == MoveDirection.Down) -1 else 0
 
 		var succeededOnce = false
-		do {
-			val new = currentPiece.run { copy(x = x + xOffset, y = y + yOffset) }
-			if (new.fits) {
-				currentPiece = new
+
+		tailrec fun checkNext(current: Tetromino): Tetromino {
+			val new = current.run { copy(x = x + xOffset, y = y + yOffset) }
+			return if (!new.fits) current
+			else {
 				succeededOnce = true
+				if (!repeat) new
+				else checkNext(new)
 			}
-		} while (repeat && new.fits)
+		}
+
+		currentPiece = checkNext(currentPiece)
 
 		if (succeededOnce) Renderer.drawFrame()
 	}

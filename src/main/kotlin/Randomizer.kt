@@ -1,19 +1,14 @@
 import kotlin.random.*
 
-abstract class Randomizer {
-	abstract fun next(): Tetromino
-
-	companion object {
-		val tetrominoTypes = Tetromino.Type.values()
-	}
+interface Randomizer {
+	fun next(): Tetromino
 }
 
-class MemorylessRandomizer : Randomizer() {
-	override fun next() = Tetromino.spawn(tetrominoTypes.run { get(Random.nextInt(indices)) })
-
+class MemorylessRandomizer : Randomizer {
+	override fun next() = Tetromino.spawn(Tetromino.Type.values().run { get(Random.nextInt(indices)) })
 }
 
-class BagRandomizer(private val bagCount: Int) : Randomizer() {
+class BagRandomizer(private val bagCount: Int) : Randomizer {
 	private val bag = mutableListOf<Tetromino>()
 
 	override fun next(): Tetromino {

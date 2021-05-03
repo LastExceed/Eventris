@@ -27,7 +27,7 @@ class Tetromino(
 			type,
 			Orientation.North,
 			stageWidth / 2 - 2,
-			stageHeight + 1
+			stageHeight
 		)
 	}
 

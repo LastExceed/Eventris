@@ -5,7 +5,7 @@ const val stageWidth = 10
 const val stageHeight = 20
 
 val virtualHeight
-	get() = stageHeight + 3 + stageHeight + 1
+	get() = stageHeight + 4
 
 object Game {
 	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }

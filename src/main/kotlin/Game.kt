@@ -9,7 +9,7 @@ val virtualHeight
 
 object Game {
 	private val randomizer = BagRandomizer(1)
-	private val rotationSystem = SRS
+	private val rotationSystem = SRSjstris
 	val stage = MutableList(virtualHeight) { Array(stageWidth) { Color.Black } }
 	var currentTetromino = randomizer.next()
 	val ghost
@@ -78,7 +78,7 @@ object Game {
 			get((index + offset) % 4)
 		}
 
-		val kickTable = rotationSystem.getKicktable(type, orientation, newOrientation)
+		val kickTable = rotationSystem.getKicktable(type, orientation, rotation)
 		val kick = kickTable.find { copy(newOrientation, x + it.first, y + it.second).fits }
 
 		if (kick != null) {

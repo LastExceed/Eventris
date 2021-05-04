@@ -5,7 +5,7 @@ import org.lwjgl.glfw.*
 import org.lwjgl.opengl.*
 
 object Renderer {
-	lateinit var window: Window
+	private lateinit var window: Window
 
 	fun init() {
 		Glfw.init()

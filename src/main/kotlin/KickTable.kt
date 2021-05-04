@@ -72,5 +72,4 @@ object SRSjstris : RotationSystem {
 			}
 		} else SRS.getKicktable(type, from, rotation)
 	}
-
 }

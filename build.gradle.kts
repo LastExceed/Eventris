@@ -5,12 +5,18 @@ plugins {
 }
 
 repositories {
-	maven("https://dl.bintray.com/dominaezzz/kotlin-native")
+	maven("https://maven.pkg.github.com/Dominaezzz/matrix-kt") {
+		credentials {
+			username = System.getenv("GITHUB_USER") // Your GitHub username
+			password = System.getenv("GITHUB_TOKEN") // A GitHub token with `read:packages`
+		}
+	}
+	mavenCentral()
 }
 
 val host: OperatingSystem = OperatingSystem.current()
 
-val kglVersion = "0.1.10"
+val kglVersion = "0.1.11"
 val lwjglVersion = "3.2.3"
 
 val lwjglNatives = when {

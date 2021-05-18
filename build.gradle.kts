@@ -16,9 +16,6 @@ repositories {
 
 val host: OperatingSystem = OperatingSystem.current()
 
-val kglVersion = "0.1.11"
-val lwjglVersion = "3.2.3"
-
 val lwjglNatives = when {
 	host.isLinux -> "natives-linux"
 	host.isMacOsX -> "natives-macos"
@@ -27,12 +24,16 @@ val lwjglNatives = when {
 }
 
 dependencies {
-	implementation("com.kgl", "kgl-opengl", kglVersion)
-	implementation("com.kgl", "kgl-glfw", kglVersion)
+	setOf(
+		"glfw",
+		"opengl"
+	).forEach { implementation("com.kgl", "kgl-$it", "0.1.11") }
 
-	runtimeOnly("org.lwjgl", "lwjgl", lwjglVersion, classifier = lwjglNatives)
-	runtimeOnly("org.lwjgl", "lwjgl-glfw", lwjglVersion, classifier = lwjglNatives)
-	runtimeOnly("org.lwjgl", "lwjgl-opengl", lwjglVersion, classifier = lwjglNatives)
+	setOf(
+		"",
+		"-glfw",
+		"-opengl"
+	).forEach { runtimeOnly("org.lwjgl", "lwjgl$it", "3.2.3", classifier = lwjglNatives) }
 }
 
 

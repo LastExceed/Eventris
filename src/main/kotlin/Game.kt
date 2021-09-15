@@ -21,22 +21,35 @@ object Game {
 
 			KeyboardKey.LEFT -> {
 				Das.begin(DasDirection.Left)
-				if (currentTetromino.tryMove(MoveDirection.Left, false)) Renderer.drawFrame()
+				val moved = currentTetromino.tryMove(MoveDirection.Left, false)
+				if (moved) Renderer.drawFrame()
 			}
 			KeyboardKey.RIGHT -> {
 				Das.begin(DasDirection.Right)
-				if (currentTetromino.tryMove(MoveDirection.Right, false)) Renderer.drawFrame()
+				val moved = currentTetromino.tryMove(MoveDirection.Right, false)
+				if (moved) Renderer.drawFrame()
 			}
 			KeyboardKey.DOWN -> {
-				if (currentTetromino.tryMove(MoveDirection.Down, true)) Renderer.drawFrame()
+				val moved = currentTetromino.tryMove(MoveDirection.Down, true)
+				if (moved) Renderer.drawFrame()
 			}
 			KeyboardKey.SPACE -> {
-				if (currentTetromino.tryMove(MoveDirection.Down, true)) Renderer.drawFrame()
+				val moved = currentTetromino.tryMove(MoveDirection.Down, true)
+				if (moved) Renderer.drawFrame()
 				lockPiece()
 			}
-			KeyboardKey.A -> if (currentTetromino.tryRotate(Rotation.CounterClockwise)) Renderer.drawFrame()
-			KeyboardKey.D -> if (currentTetromino.tryRotate(Rotation.Clockwise)) Renderer.drawFrame()
-			KeyboardKey.LEFT_SHIFT -> if (currentTetromino.tryRotate(Rotation.OneEighty)) Renderer.drawFrame()
+			KeyboardKey.A -> {
+				val rotated = currentTetromino.tryRotate(Rotation.CounterClockwise)
+				if (rotated) Renderer.drawFrame()
+			}
+			KeyboardKey.D -> {
+				val rotated = currentTetromino.tryRotate(Rotation.Clockwise)
+				if (rotated) Renderer.drawFrame()
+			}
+			KeyboardKey.LEFT_SHIFT -> {
+				val rotated = currentTetromino.tryRotate(Rotation.OneEighty)
+				if (rotated) Renderer.drawFrame()
+			}
 			else -> {
 			}
 		}

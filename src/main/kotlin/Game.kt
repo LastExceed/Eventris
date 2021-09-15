@@ -16,6 +16,11 @@ object Game {
 		get() = currentTetromino.copy().apply { tryMove(MoveDirection.Down, true) }
 
 	fun onKeyDown(key: KeyboardKey) {
+		val rotations = mapOf(
+			KeyboardKey.A to Rotation.CounterClockwise,
+			KeyboardKey.D to Rotation.Clockwise,
+			KeyboardKey.LEFT_SHIFT to Rotation.OneEighty,
+		)
 		when (key) {
 			KeyboardKey.F11 -> Renderer.toggleFullscreen()
 
@@ -38,16 +43,8 @@ object Game {
 				if (moved) Renderer.drawFrame()
 				lockPiece()
 			}
-			KeyboardKey.A -> {
-				val rotated = currentTetromino.tryRotate(Rotation.CounterClockwise)
-				if (rotated) Renderer.drawFrame()
-			}
-			KeyboardKey.D -> {
-				val rotated = currentTetromino.tryRotate(Rotation.Clockwise)
-				if (rotated) Renderer.drawFrame()
-			}
-			KeyboardKey.LEFT_SHIFT -> {
-				val rotated = currentTetromino.tryRotate(Rotation.OneEighty)
+			in rotations -> {
+				val rotated = currentTetromino.tryRotate(rotations.getValue(key))
 				if (rotated) Renderer.drawFrame()
 			}
 			else -> {

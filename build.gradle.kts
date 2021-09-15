@@ -35,5 +35,3 @@ dependencies {
 		"-opengl"
 	).forEach { runtimeOnly("org.lwjgl", "lwjgl$it", "3.2.3", classifier = lwjglNatives) }
 }
-
-

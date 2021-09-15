@@ -42,10 +42,7 @@ object Renderer {
 	fun toggleFullscreen() {
 		with(Glfw.primaryMonitor!!) {
 			val monitor = if (window.monitor == null) this else null
-			//https://github.com/Dominaezzz/kgl/issues/33
-			//window.setMonitor(monitor, 0, 0, videoMode.width, videoMode.height, videoMode.refreshRate)
-			GLFW.glfwSetWindowMonitor(window.ptr, monitor?.ptr ?: 0, 0, 0, videoMode.width, videoMode.height, videoMode.refreshRate)
-
+			window.setMonitor(monitor, 0, 0, videoMode.width, videoMode.height, videoMode.refreshRate)
 			if (monitor == null) {
 				window.position = 100 to 100
 				drawFrame()
